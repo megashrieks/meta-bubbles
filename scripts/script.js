@@ -4,7 +4,7 @@ var ctx = can.getContext("2d");
 var arr = [];
 var grid = [];
 const TOTAL_CIRCLES = 10;
-const GRID_SIZE = 5;
+const GRID_SIZE = 7.5;
 class Circle {
     constructor() {
         this.x = ~~(Math.random() * can.width);
@@ -59,18 +59,86 @@ function draw() {
             if (v > 1) {
                 ctx.beginPath();
                 ctx.arc(i, j, 2, 0, Math.PI * 2);
-                ctx.fill();
+                //ctx.fill();
                 ctx.closePath();
             }
-            grid[i / GRID_SIZE][j / GRID_SIZE] = v;
+            grid[(i / GRID_SIZE)][(j / GRID_SIZE)] = v;
         }
     }
-    for (var i = 0; i < grid.length - 1; ++i) {
-        for (var j = 0; j < grid[i].length - 1; ++j) {
-            var a = grid[i][j];
-            var b = grid[i][j + 1];
-            var c = grid[i + 1][j];
-            var d = grid[i + 1][j + 1];
+    for (var i = 0; i < can.width - GRID_SIZE; i += GRID_SIZE) {
+        for (var j = 0; j < can.height - GRID_SIZE; j += GRID_SIZE) {
+            var a = grid[i / GRID_SIZE][j / GRID_SIZE] > 1;
+            var b = grid[i / GRID_SIZE][(j + GRID_SIZE) / GRID_SIZE] > 1;
+            var c = grid[(i + GRID_SIZE) / GRID_SIZE][(j + GRID_SIZE) / GRID_SIZE] > 1;
+            var d = grid[(i + GRID_SIZE) / GRID_SIZE][j / GRID_SIZE] > 1;
+            var p1, p2;
+            if ((a && !b && !c && !d) || (!a && b && c && d)) {
+                p1 = {
+                    x: i + GRID_SIZE / 2,
+                    y: j
+                };
+
+                p2 = {
+                    x: i,
+                    y: j + GRID_SIZE / 2
+                };
+            }
+            else if ((!a && b && !c && !d) || (a && !b && c && d)) {
+                p1 = {
+                    x: i,
+                    y: j + GRID_SIZE / 2
+                };
+
+                p2 = {
+                    x: i + GRID_SIZE / 2,
+                    y: j + GRID_SIZE
+                };
+            }
+            else if ((!a && !b && c && !d) || (a && b && !c && d)) {
+                p1 = {
+                    x: i + GRID_SIZE / 2,
+                    y: j + GRID_SIZE
+                }
+                p2 = {
+                    x: i + GRID_SIZE,
+                    y: j + GRID_SIZE / 2
+                };
+            }
+            else if ((!a && !b && !c && d) || (a && b && c && !d)) {
+                p1 = {
+                    x: i + GRID_SIZE,
+                    y: j + GRID_SIZE / 2
+                }
+                p2 = {
+                    x: i + GRID_SIZE / 2,
+                    y: j
+                };
+            } else if ((a && b && !c && !d) || (!a && !b && c && d)) {
+                p1 = {
+                    x: i + GRID_SIZE / 2,
+                    y: j
+                }
+                p2 = {
+                    x: i + GRID_SIZE / 2,
+                    y: j + GRID_SIZE
+                };
+            } else if ((a && !b && !c && d) || (!a && b && c && !d)) {
+                p1 = {
+                    x: i,
+                    y: j + GRID_SIZE / 2
+                }
+                p2 = {
+                    x: i + GRID_SIZE,
+                    y: j + GRID_SIZE / 2
+                };
+            }
+            if (p1 != undefined && p2 != undefined) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+                ctx.closePath();
+            }
         }
     }
     requestAnimationFrame(draw);
