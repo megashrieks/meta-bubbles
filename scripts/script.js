@@ -190,7 +190,7 @@ function draw() {
                 }
                 if (p1 != undefined && p2 != undefined) {
                     ctx.beginPath();
-                    ctx.strokeStyle = "orange";
+                    ctx.strokeStyle = "cyan";
                     ctx.moveTo(p1.x, p1.y);
                     ctx.lineTo(p2.x, p2.y);
                     ctx.stroke();
@@ -204,8 +204,25 @@ function draw() {
 function resize() {
     can.width = window.innerWidth;
     can.height = window.innerHeight;
+    setup();
 }
 window.onresize = resize;
+
+can.ontouchmove = function (e) {
+    for (var i = 0; i < settings.circles; ++i) {
+        function timeout(i) {
+            setTimeout(function () {
+                if (i < window.arr.length)
+                    window.arr[i].target = {
+                        x: e.clientX,
+                        y: e.clientY
+                    }
+            }, i * settings.delay);
+        }
+        timeout(i);
+    }
+}
+
 can.onmousemove = function (e) {
     for (var i = 0; i < settings.circles; ++i) {
         function timeout(i) {
