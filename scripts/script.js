@@ -3,13 +3,13 @@ var ctx = can.getContext("2d");
 
 var arr = [];
 var grid = [];
-const TOTAL_CIRCLES = 10;
+const TOTAL_CIRCLES = 15;
 const GRID_SIZE = 5;
 class Circle {
     constructor() {
         this.x = 50 + ~~(Math.random() * (can.width - 100));
         this.y = 50 + ~~(Math.random() * (can.height - 100));
-        this.radius = 50 + ~~(Math.random() * 20);
+        this.radius = 40 + ~~(Math.random() * 20);
         this.directions = [1, -1]
         this.vel = {
             x: 3 * Math.random() * this.directions[~~(Math.random() * 2)],
@@ -23,13 +23,6 @@ class Circle {
             this.vel.x *= -1;
         if (this.y + this.radius >= can.height || this.y - this.radius <= 0)
             this.vel.y *= -1;
-    }
-    draw() {
-        ctx.beginPath();
-        ctx.strokeStyle = "#fff";
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.closePath();
     }
 }
 
@@ -50,6 +43,10 @@ function lerp(p1, p2) {
         x: p2.x + (p1.x - p2.x) * ((1.0 - grid[p2.x / GRID_SIZE][p2.y / GRID_SIZE]) / (grid[p1.x / GRID_SIZE][p1.y / GRID_SIZE] - grid[p2.x / GRID_SIZE][p2.y / GRID_SIZE])),
         y: p2.y + (p1.y - p2.y) * ((1.0 - grid[p2.x / GRID_SIZE][p2.y / GRID_SIZE]) / (grid[p1.x / GRID_SIZE][p1.y / GRID_SIZE] - grid[p2.x / GRID_SIZE][p2.y / GRID_SIZE]))
     }
+}
+function v_to_b(v1, v2, v3, v4) {
+    //variable to binary
+    return v4 + (v3 << 1) + (v2 << 2) + (v1 << 3);
 }
 function draw() {
     ctx.fillStyle = "#000";
@@ -89,7 +86,8 @@ function draw() {
                 y: j
             };
             var p1, p2, p3, p4, temp;
-            if ((a && !b && !c && !d) || (!a && b && c && d)) {
+            var v = v_to_b(a, b, c, d);
+            if (v == 8 || v == 7) {
                 temp = lerp(ap, dp);
                 p1 = {
                     x: temp.x,
@@ -101,7 +99,7 @@ function draw() {
                     y: temp.y
                 };
             }
-            else if ((!a && b && !c && !d) || (a && !b && c && d)) {
+            else if (v == 4 || v == 11) {
                 temp = lerp(bp, ap);
                 p1 = {
                     x: temp.x,
@@ -113,7 +111,7 @@ function draw() {
                     y: temp.y
                 };
             }
-            else if ((!a && !b && c && !d) || (a && b && !c && d)) {
+            else if (v == 2 || v == 13) {
                 temp = lerp(cp, bp)
                 p1 = {
                     x: temp.x,
@@ -125,7 +123,7 @@ function draw() {
                     y: temp.y
                 };
             }
-            else if ((!a && !b && !c && d) || (a && b && c && !d)) {
+            else if (v == 1 || v == 14) {
                 temp = lerp(dp, cp)
                 p1 = {
                     x: temp.x,
@@ -137,7 +135,7 @@ function draw() {
                     y: temp.y
                 };
             }
-            else if ((a && b && !c && !d) || (!a && !b && c && d)) {
+            else if (v == 12 || v == 3) {
                 temp = lerp(ap, dp);
                 p1 = {
                     x: temp.x,
@@ -149,7 +147,7 @@ function draw() {
                     y: temp.y
                 };
             }
-            else if ((a && !b && !c && d) || (!a && b && c && !d)) {
+            else if (v == 9 || v == 6) {
                 temp = lerp(ap, bp);
                 p1 = {
                     x: temp.x,
@@ -161,7 +159,7 @@ function draw() {
                     y: temp.y
                 };
             }
-            else if (!a && b && !c && d) {
+            else if (v == 5) {
                 temp = lerp(ap, bp);
                 p1 = {
                     x: temp.x,
@@ -182,7 +180,7 @@ function draw() {
                     x: temp.x,
                     y: temp.y
                 };
-            } else if (a && !b && c && !d) {
+            } else if (v == 10) {
                 temp = lerp(ap, bp);
                 p1 = {
                     x: temp.x,
