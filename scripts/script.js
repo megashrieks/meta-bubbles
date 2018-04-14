@@ -114,7 +114,7 @@ function draw() {
                     x: i + settings["grid size"],
                     y: j
                 };
-                var p1, p2, p3, p4, temp;
+                var p1, p2, temp;
                 var v = v_to_b(a, b, c, d);
                 if (v == 8 || v == 7) {
                     temp = lerp(ap, dp);
@@ -188,62 +188,11 @@ function draw() {
                         y: temp.y
                     };
                 }
-                else if (v == 5) {
-                    temp = lerp(ap, bp);
-                    p1 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                    temp = lerp(ap, dp);
-                    p2 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                    temp = lerp(bp, cp);
-                    p3 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                    temp = lerp(cp, dp);
-                    p4 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                } else if (v == 10) {
-                    temp = lerp(ap, bp);
-                    p1 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                    temp = lerp(bp, cp);
-                    p2 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                    temp = lerp(ap, dp);
-                    p3 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                    temp = lerp(dp, cp);
-                    p4 = {
-                        x: temp.x,
-                        y: temp.y
-                    };
-                }
                 if (p1 != undefined && p2 != undefined) {
                     ctx.beginPath();
                     ctx.strokeStyle = "orange";
                     ctx.moveTo(p1.x, p1.y);
                     ctx.lineTo(p2.x, p2.y);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-                if (p3 != undefined && p4 != undefined) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = "orange";
-                    ctx.moveTo(p3.x, p3.y);
-                    ctx.lineTo(p4.x, p4.y);
                     ctx.stroke();
                     ctx.closePath();
                 }
